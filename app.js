@@ -29,8 +29,16 @@ app.post(`${api}/products`,(req, res)=>{
     res.send(newProduct)
 })
 
-mongoose.connect(uri)
-
+mongoose.connect(uri, {
+ 
+})
+.then(()=>{
+    console.log('Database connection is ready');
+})
+.catch((err) => {
+    console.log(err);
+    
+})
 app.listen(3000, ()=>{
     console.log('server has started now at http://localhost:3000');
     console.log(api);
