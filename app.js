@@ -13,6 +13,14 @@ require('dotenv/config')
 const api = process.env.API_URL
 const uri = process.env.MONGODB_URI
 
+const productSchema = mongoose.Schema({
+    name: String,
+    image: String,
+    countInStock: Number,
+})
+
+const Product = mongoose.model('Product', productSchema)
+
 app.get(`${api}/products`,(req, res)=>{
     const product = {
         id:1,
@@ -23,14 +31,25 @@ app.get(`${api}/products`,(req, res)=>{
 })
 
 app.post(`${api}/products`,(req, res)=>{
-    const newProduct = req.body
-    console.log(newProduct);
+    const product = new Product({
+        name: req.body.name,
+        Image: req.body.image,
+        countInStock: req.body.countInStock, 
+    })
     
-    res.send(newProduct)
+    product.save().then((craetedProduct => {
+        res.status(201).json(craetedProduct)
+    })).catch((err) => {
+        res.status(500).json({
+            error: err,
+            success: false,
+        })
+    })
+    // res.send(newProduct)
 })
 
 mongoose.connect(uri, {
- 
+
 })
 .then(()=>{
     console.log('Database connection is ready');
